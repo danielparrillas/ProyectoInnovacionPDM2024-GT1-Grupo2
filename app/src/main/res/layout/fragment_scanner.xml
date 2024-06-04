@@ -8,7 +8,7 @@
     tools:context=".ui.scanner.ScannerFragment">
 
     <com.budiyev.android.codescanner.CodeScannerView
-        android:id="@+id/scanner_view"
+        android:id="@+id/codeScanner"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         app:autoFocusButtonColor="@android:color/white"
