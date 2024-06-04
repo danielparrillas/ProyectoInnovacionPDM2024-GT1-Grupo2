@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.parrillas.proyectoinnovacionpdm2024_gt1_grupo2"
-        minSdk = 22
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,4 +51,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation("com.github.yuriy-budiyev:code-scanner:2.3.0") // dependency for QR code scanner
 }
