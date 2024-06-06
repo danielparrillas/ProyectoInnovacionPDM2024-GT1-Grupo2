@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiClient(private val tokenManager: TokenManager) {
-    private val BASE_URL = "http://3.144.23.33/api/"
+    private val BASE_URL = "http://3.144.23.33/"
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(AuthInterceptor(tokenManager))
