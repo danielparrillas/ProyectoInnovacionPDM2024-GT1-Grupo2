@@ -6,5 +6,5 @@ import retrofit2.http.POST
 
 interface MarcacionService {
     @POST("perfil/marcar")
-    fun marcarEntrada(@Body marcacionRequest: MarcacionRequest): Call<Void>
+    fun marcar(@Body marcacionRequest: MarcacionRequest): Call<Void>
 }

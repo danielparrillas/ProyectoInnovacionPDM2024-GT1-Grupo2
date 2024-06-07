@@ -13,17 +13,23 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.ues.proyectoinnovacion.R
+import com.ues.proyectoinnovacion.api.ApiClient
+import com.ues.proyectoinnovacion.api.TokenManager
+import com.ues.proyectoinnovacion.api.login.LoginResponse
+import com.ues.proyectoinnovacion.api.marcacion.MarcacionRequest
+import com.ues.proyectoinnovacion.api.marcacion.MarcacionService
 
 
 private const val CAMERA_REQUEST_CODE = 101
 
 class FragmentEscanear: Fragment() {
 
-    private lateinit var escaner: CodeScanner
+    private lateinit var codeScanner: CodeScanner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +49,11 @@ class FragmentEscanear: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        escaner.startPreview()
+        codeScanner.startPreview()
     }
 
     override fun onPause() {
-        escaner.releaseResources()
+        codeScanner.releaseResources()
         super.onPause()
     }
 
@@ -73,33 +79,21 @@ class FragmentEscanear: Fragment() {
     }
 
     fun initComponents(view: View){
-        escaner = CodeScanner(requireContext(), view.findViewById(R.id.escaner))
-        escaner.apply {
-            camera = CodeScanner.CAMERA_BACK
-            formats = CodeScanner.ALL_FORMATS
-            autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
-            isAutoFocusEnabled = true
-            isFlashEnabled = false
-            decodeCallback = DecodeCallback {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(requireContext(), "Resultado: ${it.text}", Toast.LENGTH_SHORT)
-                }
+        val scannerView = view.findViewById<CodeScannerView>(R.id.escaner)
+        val activity = requireActivity()
+        codeScanner = CodeScanner(activity, scannerView)
+        codeScanner.decodeCallback = DecodeCallback {
+            activity.runOnUiThread {
+                this@FragmentEscanear.marcar(it.text)
             }
-            errorCallback = ErrorCallback {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(), "Camera initialization error: ${it.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    Log.e("ScannerFragment", "Camera initialization error: ${it.message}")
-                }
-            }
+        }
+        scannerView.setOnClickListener {
+            codeScanner.startPreview()
         }
     }
 
     private fun initListeners(){
-        escaner.startPreview()
+        codeScanner.startPreview()
     }
 
     private fun setupPermissions() {
@@ -120,5 +114,36 @@ class FragmentEscanear: Fragment() {
             arrayOf(Manifest.permission.CAMERA),
             CAMERA_REQUEST_CODE
         )
+    }
+
+    private fun marcar(codigo: String){
+        val tokenManager = TokenManager(requireContext())
+        val apiClient = ApiClient(tokenManager)
+        val request = MarcacionRequest(codigo)
+        val call = apiClient.createService<MarcacionService>().marcar(request)
+
+        call.enqueue(object : retrofit2.Callback<Void> {
+            override fun onResponse(
+                call: retrofit2.Call<Void>,
+                response: retrofit2.Response<Void>
+            ) {
+                if (response.isSuccessful){
+                    Toast.makeText(requireContext(), "Se registro la marca", Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Hubo un error al marcar",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            override fun onFailure(
+                call: retrofit2.Call<Void>,
+                t: Throwable
+            ) {
+                Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
