@@ -1,15 +1,9 @@
 pluginManagement {
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url = uri("https://jitpack.io") } // Agrega esta línea
+        maven { url = uri("https://jitpack.io") }
     }
 }
 dependencyResolutionManagement {
@@ -17,9 +11,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://jitpack.io") } // Agrega esta línea
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
-rootProject.name = "ProyectoInnovacionPDM2024-GT1-Grupo2"
+rootProject.name = "Proyecto Innovacion"
 include(":app")
