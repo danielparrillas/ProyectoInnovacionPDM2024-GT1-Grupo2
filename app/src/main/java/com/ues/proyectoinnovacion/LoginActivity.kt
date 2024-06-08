@@ -12,8 +12,9 @@ import com.ues.proyectoinnovacion.api.TokenManager
 import com.ues.proyectoinnovacion.api.login.LoginRequest
 import com.ues.proyectoinnovacion.api.login.LoginResponse
 import com.ues.proyectoinnovacion.api.login.LoginService
+import es.dmoral.toasty.Toasty
 
-class LoginActivity: AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private lateinit var bLogin: Button
     private lateinit var etEmail: TextInputEditText
     private lateinit var etPassword: TextInputEditText
@@ -25,8 +26,7 @@ class LoginActivity: AppCompatActivity() {
         initListener()
     }
 
-    private fun initComponents()
-    {
+    private fun initComponents() {
         bLogin = findViewById(R.id.btnIniciarSesion)
         etEmail = findViewById(R.id.etCorreo)
         etPassword = findViewById(R.id.etContrasena)
@@ -37,7 +37,7 @@ class LoginActivity: AppCompatActivity() {
             val email = etEmail.text.toString()
             val password = etPassword.text.toString()
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Email y contraseña son requeridos", Toast.LENGTH_SHORT).show()
+                Toasty.warning(this, "Email y contraseña son requeridos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             login(email, password)
@@ -58,20 +58,22 @@ class LoginActivity: AppCompatActivity() {
                 if (response.isSuccessful) {
                     val loginResponse = response.body()
                     if (loginResponse != null) {
-                        Toast.makeText(
+                        Toasty.success(
                             this@LoginActivity,
                             "Bienvenido",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
+                            true
                         ).show()
                         tokenManager.saveToken(loginResponse.access_token)
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     }
                 } else {
-                    Toast.makeText(
+                    Toasty.error(
                         this@LoginActivity,
                         "Credenciales incorrectas",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
+                        true
                     ).show()
                 }
             }
@@ -80,7 +82,7 @@ class LoginActivity: AppCompatActivity() {
                 call: retrofit2.Call<LoginResponse>,
                 t: Throwable
             ) {
-                Toast.makeText(this@LoginActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
+                Toasty.error(this@LoginActivity, "Error de conexión", Toast.LENGTH_SHORT).show()
             }
         })
     }

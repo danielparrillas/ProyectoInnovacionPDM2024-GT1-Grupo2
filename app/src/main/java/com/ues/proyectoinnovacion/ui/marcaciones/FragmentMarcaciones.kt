@@ -19,6 +19,7 @@ import com.ues.proyectoinnovacion.api.TokenManager
 import com.ues.proyectoinnovacion.api.marcacion.Marcacion
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionResponse
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionService
+import es.dmoral.toasty.Toasty
 import jxl.Workbook
 import jxl.write.Label
 import jxl.write.WritableSheet
@@ -63,7 +64,7 @@ class FragmentMarcaciones : Fragment() {
                         llenarLista(marcacionResponse.data)
                     }
                 } else {
-                    Toast.makeText(
+                    Toasty.error(
                         requireContext(),
                         "Error al obtener las marcaciones",
                         Toast.LENGTH_SHORT
@@ -73,7 +74,7 @@ class FragmentMarcaciones : Fragment() {
 
             override fun onFailure(call: retrofit2.Call<MarcacionResponse>, t: Throwable) {
                 Log.e("FragmentMarcaciones", "Error al obtener las marcaciones", t)
-                Toast.makeText(
+                Toasty.error(
                     requireContext(),
                     "Error al obtener las marcaciones",
                     Toast.LENGTH_SHORT
@@ -129,7 +130,7 @@ class FragmentMarcaciones : Fragment() {
         workbook.write()
         workbook.close()
 
-        Toast.makeText(requireContext(), "Marcaciones exportadas", Toast.LENGTH_SHORT).show()
+        Toasty.success(requireContext(), "Marcaciones exportadas", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

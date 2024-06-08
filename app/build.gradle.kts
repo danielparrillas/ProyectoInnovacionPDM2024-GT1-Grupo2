@@ -66,4 +66,6 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     //excel
     implementation ("net.sourceforge.jexcelapi:jxl:2.6.12")
+    //better toast
+    implementation ("com.github.GrenderG:Toasty:1.5.0")
 }

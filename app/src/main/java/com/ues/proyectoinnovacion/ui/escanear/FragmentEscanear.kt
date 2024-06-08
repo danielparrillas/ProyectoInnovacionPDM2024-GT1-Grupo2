@@ -11,18 +11,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
-import com.budiyev.android.codescanner.ErrorCallback
-import com.budiyev.android.codescanner.ScanMode
 import com.ues.proyectoinnovacion.R
 import com.ues.proyectoinnovacion.api.ApiClient
 import com.ues.proyectoinnovacion.api.TokenManager
-import com.ues.proyectoinnovacion.api.login.LoginResponse
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionRequest
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionService
+import es.dmoral.toasty.Toasty
 
 
 private const val CAMERA_REQUEST_CODE = 101
@@ -65,7 +62,7 @@ class FragmentEscanear: Fragment() {
         when (requestCode) {
             CAMERA_REQUEST_CODE -> {
                 if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(
+                    Toasty.info(
                         requireContext(),
                         "You need the camera permission to be able to use this app!",
                         Toast.LENGTH_LONG
@@ -128,10 +125,10 @@ class FragmentEscanear: Fragment() {
                 response: retrofit2.Response<Void>
             ) {
                 if (response.isSuccessful){
-                    Toast.makeText(requireContext(), "Se registro la marca", Toast.LENGTH_SHORT).show()
+                    Toasty.success(requireContext(), "Se registro la marca", Toast.LENGTH_SHORT).show()
                 }
                 else {
-                    Toast.makeText(
+                    Toasty.error(
                         requireContext(),
                         "Hubo un error al marcar",
                         Toast.LENGTH_SHORT
@@ -142,7 +139,7 @@ class FragmentEscanear: Fragment() {
                 call: retrofit2.Call<Void>,
                 t: Throwable
             ) {
-                Toast.makeText(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show()
+                Toasty.error(requireContext(), "Error de conexión", Toast.LENGTH_SHORT).show()
             }
         })
     }
