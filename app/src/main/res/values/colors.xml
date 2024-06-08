@@ -227,4 +227,6 @@
     <color name="rose_700">#BE123C</color>
     <color name="rose_800">#9F1239</color>
     <color name="rose_900">#881337</color>
+    <color name="blue">#2196F3</color>
+    <color name="green">#009688</color>
 </resources>
