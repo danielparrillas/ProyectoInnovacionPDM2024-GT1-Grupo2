@@ -1,6 +1,9 @@
 package com.ues.proyectoinnovacion.ui.marcaciones
 
 import MarcacionAdapter
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +19,10 @@ import com.ues.proyectoinnovacion.api.TokenManager
 import com.ues.proyectoinnovacion.api.marcacion.Marcacion
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionResponse
 import com.ues.proyectoinnovacion.api.marcacion.MarcacionService
+import jxl.Workbook
+import jxl.write.Label
+import jxl.write.WritableSheet
+import java.io.File
 
 class FragmentMarcaciones : Fragment() {
     private lateinit var bExportar: Button
@@ -81,6 +88,52 @@ class FragmentMarcaciones : Fragment() {
         lvMarcaciones.adapter = adapter
     }
 
-    private fun exportarMarcaciones() {}
+    private fun exportarMarcaciones() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/vnd.ms-excel"
+            putExtra(Intent.EXTRA_TITLE, "marcaciones.xls")
+        }
+        startActivityForResult(intent, CREATE_FILE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CREATE_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                writeExcelFile(uri)
+            }
+        }
+    }
+
+    private fun writeExcelFile(uri: Uri) {
+        val adapter = lvMarcaciones.adapter as MarcacionAdapter
+        val marcaciones = adapter.getMarcaciones()
+
+        val outputStream = requireContext().contentResolver.openOutputStream(uri)
+        val workbook = Workbook.createWorkbook(outputStream)
+        val sheet: WritableSheet = workbook.createSheet("Marcaciones", 0)
+
+        // Add headers
+        sheet.addCell(Label(0, 0, "ID"))
+        sheet.addCell(Label(1, 0, "Tipo"))
+        sheet.addCell(Label(2, 0, "Fecha"))
+
+        // Add data
+        marcaciones?.forEachIndexed { index, marcacion ->
+            sheet.addCell(Label(0, index + 1, marcacion.id.toString()))
+            sheet.addCell(Label(1, index + 1, marcacion.tipo))
+            sheet.addCell(Label(2, index + 1, marcacion.fecha))
+        }
+
+        workbook.write()
+        workbook.close()
+
+        Toast.makeText(requireContext(), "Marcaciones exportadas", Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val CREATE_FILE_REQUEST_CODE = 1
+    }
 
 }

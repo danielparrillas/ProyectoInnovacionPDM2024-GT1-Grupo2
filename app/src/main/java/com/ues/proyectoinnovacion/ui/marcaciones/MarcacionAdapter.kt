@@ -40,6 +40,14 @@ class MarcacionAdapter(context: Context, marcaciones: List<Marcacion>) :
         return view
     }
 
+    fun getMarcaciones(): List<Marcacion> {
+        val marcaciones = mutableListOf<Marcacion>()
+        for (i in 0 until count) {
+            marcaciones.add(getItem(i)!!)
+        }
+        return marcaciones
+    }
+
     private fun convertirFecha(fecha: String): String {
         val originalFormat = SimpleDateFormat("dd-MM-yyyy", Locale.US)
         val targetFormat = SimpleDateFormat("EEEE, dd 'de' MMMM 'de' yyyy", Locale("es", "ES"))
