@@ -68,4 +68,6 @@ dependencies {
     implementation ("net.sourceforge.jexcelapi:jxl:2.6.12")
     //better toast
     implementation ("com.github.GrenderG:Toasty:1.5.0")
+    // charts
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

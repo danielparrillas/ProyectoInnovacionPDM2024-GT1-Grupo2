@@ -15,4 +15,9 @@
         android:name="com.ues.proyectoinnovacion.ui.marcaciones.FragmentMarcaciones"
         android:label="Mis marcaciones"
         tools:layout="@layout/fragment_mis_marcaciones"/>
+    <fragment
+        android:id="@+id/navigation_chart"
+        android:name="com.ues.proyectoinnovacion.ui.ChartFragment"
+        android:label="Chart"
+        tools:layout="@layout/fragment_chart"/>
 </navigation>
